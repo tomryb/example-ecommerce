@@ -13,6 +13,7 @@ IConfiguration config = builder.Configuration
     .AddEnvironmentVariables()
     .Build();
 builder.Services.AddSingleton(config);
+// TODO
 builder.Services.AddDbContext<BackendDbContext>(opt => opt.UseInMemoryDatabase("mock"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
@@ -28,16 +29,19 @@ app.MapGet("/", () => "Hello World!");
 MockAuthorizationService mockAuthorizationService = new();
 
 new ProductCatalogModule()
+    // TODO replace with AD Auth
     .AddModule(new AuthorizationAdapters(mockAuthorizationService.Authorize))
     .ToList()
     .ForEach(endpoint => app.MapMethods(endpoint.Path, new[] { endpoint.Method.Method }, endpoint.Handler));
 
 new InventoryModule()
+    // TODO replace with AD Auth
     .AddModule(new AuthorizationAdapters(mockAuthorizationService.Authorize))
     .ToList()
     .ForEach(endpoint => app.MapMethods(endpoint.Path, new[] { endpoint.Method.Method }, endpoint.Handler));
 
 new ImageUploadModule()
+    // TODO replace with AD Auth and Blob Storage implementation
     .AddModule(new AuthorizationAdapters(mockAuthorizationService.Authorize), new MockImageUploadService())
     .ToList()
     .ForEach(endpoint => app.MapMethods(endpoint.Path, new[] { endpoint.Method.Method }, endpoint.Handler));
