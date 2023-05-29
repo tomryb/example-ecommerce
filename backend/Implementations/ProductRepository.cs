@@ -27,7 +27,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetAsync(Guid id)
     {
-        Model.Product? product = await _dbContext.Products.FindAsync(id);
+        Model.Product? product = await _dbContext.Products.AsQueryable().Include(x => x.InventoryChanges).SingleOrDefaultAsync(x => x.Id == id);
         return product == null ? new Product { Id = Guid.Empty } : new Product
         {
             Id = product.Id,
@@ -40,7 +40,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<Product>> ListAsync()
     {
-        return await _dbContext.Products.Select(x => new Product
+        return await _dbContext.Products.AsQueryable().Include(x => x.InventoryChanges).Select(x => new Product
         {
             Id = x.Id,
             Name = x.Name,

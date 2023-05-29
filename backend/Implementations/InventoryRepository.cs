@@ -33,7 +33,7 @@ public class InventoryRepository : IInventoryRepository
     {
         int currentQuantity = _dbContext.ProductInventoryChanges.Where(x => x.ProductId == productId).Sum(x => x.Adjustment);
 
-        if (currentQuantity < quantity)
+        if (currentQuantity < (-quantity))
         {
             throw new InvalidOperationException("Not enough stock");
         }
@@ -41,7 +41,7 @@ public class InventoryRepository : IInventoryRepository
         await _dbContext.ProductInventoryChanges.AddAsync(new ProductInventoryChange
         {
             ProductId = productId,
-            Adjustment = -quantity,
+            Adjustment = quantity,
             ChangedBy = Guid.Empty, // TODO
             Date = DateTimeOffset.UtcNow,
             Description = "Manual adjustment",
