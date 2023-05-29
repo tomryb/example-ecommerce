@@ -24,6 +24,8 @@ public class MockAuthorizationService
                 break;
             case Permission.RemoveStock:
                 break;
+            case Permission.UploadImage:
+                break;
             default:
                 throw new NotImplementedException();
         }

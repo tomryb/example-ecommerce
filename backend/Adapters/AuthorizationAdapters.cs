@@ -2,7 +2,7 @@ using Backend.Model;
 
 namespace Backend.Adapters;
 
-public class AuthorizationAdapters : ProductCatalogModule.IAuthorizationService, InventoryModule.IAuthorizationService
+public class AuthorizationAdapters : ProductCatalogModule.IAuthorizationService, InventoryModule.IAuthorizationService, ImageUploadModule.IAuthorizationService
 {
     private readonly Action<Permission> _authorize;
 
@@ -41,6 +41,10 @@ public class AuthorizationAdapters : ProductCatalogModule.IAuthorizationService,
 
             case InventoryModule.Permissions.RemoveStock:
                 _authorize(Permission.RemoveStock);
+                break;
+
+            case ImageUploadModule.Permissions.UploadImage:
+                _authorize(Permission.UploadImage);
                 break;
 
             default:

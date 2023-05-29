@@ -8,5 +8,5 @@ public class Product
     public decimal Price { get; set; }
 
     public ICollection<ProductInventoryChange> InventoryChanges { get; set; } = new List<ProductInventoryChange>();
-
+    public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 }

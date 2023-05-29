@@ -1,17 +1,23 @@
 using Backend;
 using Backend.Adapters;
+using Backend.ImageUploadModule;
 using Backend.Implementations;
 using Backend.InventoryModule;
 using Backend.MockImplementations;
 using Backend.ProductCatalogModule;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+IConfiguration config = builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
+builder.Services.AddSingleton(config);
 builder.Services.AddDbContext<BackendDbContext>(opt => opt.UseInMemoryDatabase("mock"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
 var app = builder.Build();
 
 // When implementing Auth, uncomment this line:
@@ -28,6 +34,11 @@ new ProductCatalogModule()
 
 new InventoryModule()
     .AddModule(new AuthorizationAdapters(mockAuthorizationService.Authorize))
+    .ToList()
+    .ForEach(endpoint => app.MapMethods(endpoint.Path, new[] { endpoint.Method.Method }, endpoint.Handler));
+
+new ImageUploadModule()
+    .AddModule(new AuthorizationAdapters(mockAuthorizationService.Authorize), new MockImageUploadService())
     .ToList()
     .ForEach(endpoint => app.MapMethods(endpoint.Path, new[] { endpoint.Method.Method }, endpoint.Handler));
 

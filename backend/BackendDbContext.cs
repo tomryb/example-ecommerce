@@ -10,4 +10,5 @@ public class BackendDbContext : DbContext
 
     public DbSet<Product> Products => Set<Product>();
     public DbSet<ProductInventoryChange> ProductInventoryChanges => Set<ProductInventoryChange>();
+    public DbSet<ProductImage> ProductImages => Set<ProductImage>();
 }

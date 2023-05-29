@@ -8,5 +8,6 @@ public enum Permission
     CreateProduct,
     UpdateProduct,
     AddStock,
-    RemoveStock
+    RemoveStock,
+    UploadImage
 }
