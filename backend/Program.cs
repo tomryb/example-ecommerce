@@ -8,6 +8,7 @@ using Backend.ProductCatalogModule;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseKestrel();
 IConfiguration config = builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
@@ -20,6 +21,8 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
 var app = builder.Build();
+
+app.UseHttpsRedirection();
 
 // When implementing Auth, uncomment this line:
 // app.MapGet("/", [Authorize] () => "Hello World!");
