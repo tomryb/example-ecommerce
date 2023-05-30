@@ -11,13 +11,14 @@ Before you can run the application, make sure you have [.NET 7.0 SDK](https://do
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/<Your-Github-Username>/azure-training.git
-   cd azure-training
+   git clone https://github.com/jakubkrzysztofsikora/example-ecommerce
+   cd example-ecommerce
    ```
 
 2. Run the application:
 
    ```bash
+   cd backend
    dotnet run
    ```
 
