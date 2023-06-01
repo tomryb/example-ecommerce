@@ -27,8 +27,8 @@ steps:
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'Your Azure Service Connection'
+    azureSubscription: 'apptomrybname'
     appType: 'webApp'
-    WebAppName: 'Your App Service Name'
+    WebAppName: 'tomrybAzureCourseWebApp'
     packageForLinux: '$(Build.ArtifactStagingDirectory)/**/*.zip'
 
