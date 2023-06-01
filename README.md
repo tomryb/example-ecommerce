@@ -21,7 +21,7 @@ Before you can run the application, make sure you have [.NET 7.0 SDK](https://do
    cd backend
    dotnet run
    ```
-
+ 
 3. The application will start running on `http://localhost:5000`.
 
 ## Contact
