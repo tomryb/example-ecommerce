@@ -1,10 +1,10 @@
 terraform {
   backend "azurerm" {
-    resource_group_name = "MyResourceGroup2"
+    resource_group_name  = "MyResourceGroup2"
     storage_account_name = "storageaccountomryb"
-    container_name = "tfstate"
-    key = "state.tfstate"
-    access_key = "7UGurk51hKDDDCHf1+WblW9Q0TjBsIHWvlLT6nMXFSzA0SnveN5aKwONGzyqDxFnSiB2u4Ow1n6M+ASt9TJkqQ=="
+    container_name       = "tfstate"
+    key                  = "state.tfstate"
+    access_key           = "7UGurk51hKDDDCHf1+WblW9Q0TjBsIHWvlLT6nMXFSzA0SnveN5aKwONGzyqDxFnSiB2u4Ow1n6M+ASt9TJkqQ=="
   }
 }
 provider "azurerm" {
@@ -31,21 +31,42 @@ resource "azurerm_app_service" "example" {
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
   app_service_plan_id = azurerm_app_service_plan.example.id
+  app_settings = {
+    "APPINSIGHTS_INSTRUMENTATIONKEY"      = azurerm_application_insights.example.instrumentation_key
+    "ConnectionStrings:DefaultConnection" = "Server=tcp:${azurerm_sql_server.example.name},1433;Initial Catalog=${azurerm_sql_database.example.name};Persist Security Info=False;User ID=${azurerm_sql_server.example.administrator_login};Password=${azurerm_sql_server.example.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  }
+
+  connection_string {
+    name  = "DBConnectionString"
+    type  = "SQLAzure"
+    value = "Server=tcp:${azurerm_sql_server.example.name},1433;Initial Catalog=${azurerm_sql_database.example.name};Persist Security Info=False;User ID=${azurerm_sql_server.example.administrator_login};Password=${azurerm_sql_server.example.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  }
+}
+
+locals {
+  location = "northeurope"
+}
+
+resource "azurerm_application_insights" "example" {
+  name                = "tomrybAzureCourseAppInsights"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  application_type    = "web"
 }
 
 resource "azurerm_sql_server" "example" {
-  name                         = "mysqlservertomrybazure"
-  location                     = azurerm_resource_group.example.location
+  name                         = "example-sqlserver-tomryb-azure"
   resource_group_name          = azurerm_resource_group.example.name
+  location                     = local.location
   version                      = "12.0"
-  administrator_login          = "myAdmin"
-  administrator_login_password = "myPassword1234!"
+  administrator_login          = "adminTomRyb"
+  administrator_login_password = "passwordTomRyb1234!"
 }
 
 resource "azurerm_sql_database" "example" {
-  name                = "myDatabaseTomrybAzure"
+  name                = "example-database-tomryb-azure"
   resource_group_name = azurerm_resource_group.example.name
   server_name         = azurerm_sql_server.example.name
+  location            = local.location
   edition             = "Basic"
-  location            = azurerm_resource_group.example.location
 }
