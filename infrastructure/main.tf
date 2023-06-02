@@ -39,7 +39,7 @@ resource "azurerm_app_service" "example" {
   connection_string {
     name  = "DBConnectionString"
     type  = "SQLAzure"
-    value = "Server=tcp:${azurerm_sql_server.example.name},1433;Initial Catalog=${azurerm_sql_database.example.name};Persist Security Info=False;User ID=${azurerm_sql_server.example.administrator_login};Password=${azurerm_sql_server.example.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    value = "Server=tcp:${azurerm_sql_server.example.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_sql_database.example.name};Persist Security Info=False;User ID=${azurerm_sql_server.example.administrator_login};Password=${azurerm_sql_server.example.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 }
 
@@ -69,4 +69,20 @@ resource "azurerm_sql_database" "example" {
   server_name         = azurerm_sql_server.example.name
   location            = local.location
   edition             = "Basic"
+}
+
+
+resource "azurerm_storage_account" "example" {
+  name                     = "tomrybjagodno1"
+  resource_group_name      = azurerm_resource_group.example.name
+  location                 = local.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  account_kind             = "StorageV2"
+}
+
+resource "azurerm_storage_container" "example" {
+  name                  = "tomrybjagodno1container"
+  storage_account_name  = azurerm_storage_account.example.name
+  container_access_type = "private"
 }
